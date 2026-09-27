@@ -1,0 +1,17 @@
+sources:
+  - repo: Gaia
+    path: https://github.com/Bojanni050/Gaia-Cloud
+  - repo: Foundation-Chronicle
+    path: https://github.com/Bojanni050/Foundation
+  - repo: Chronicle-Gaia
+    path: https://github.com/Bojanni050/Chronicle-Gaia
+  - repo: Gaia-Web
+    path: https://github.com/Bojanni050/gaia-web                                 
+  - repo: Gaia Website
+    path: https://github.com/Bojanni050/gaia-website
+  - repo: Chronicle-Diary
+    path: https://github.com/Bojanni050/ChronicleDiary
+  - repo: Hermes  
+  - path: https://github.com/nousresearch/hermes-agent                         
+  
+    
