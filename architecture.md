@@ -2,13 +2,21 @@
 title: Gaia — Architecture
 document: architecture
 version: 2.4.0
-status: retired
+status: retired — superseded in direction by architecture-v3.md (proposal); leading only until the V3 decisions are ratified
+superseded_by: proposals/architecture-v3.md
 last_updated: 2026-08-20
 owner: Gaia Product Foundation
 framing: "Gaia is a lifelong personal intelligence designed to grow through understanding."
 ---
 
 # Gaia — Architecture
+
+> **Status note (2026-10-05):** this document (v2.4.0) is **retired**. The V3 direction
+> lives in [`proposals/architecture-v3.md`](./proposals/architecture-v3.md), which is a
+> **proposal**, not yet ratified. Until its open decisions are adopted, this document
+> remains the last ratified description of the architecture — retired, but not replaced
+> by anything adopted. Where the two disagree, prefer this one for "what was decided"
+> and the proposal for "where this is going".
 
 > **Gaia is a lifelong personal intelligence designed to grow through understanding.**
 >

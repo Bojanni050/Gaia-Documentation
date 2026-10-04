@@ -1,3 +1,13 @@
+---
+title: Gaia — Principles
+document: principles
+version: 1.0.0
+status: active
+last_updated: 2026-10-05
+owner: Gaia Product Foundation
+framing: "Gaia is a lifelong personal intelligence designed to grow through understanding."
+---
+
 # Gaia Principles
 
 These principles rarely change.

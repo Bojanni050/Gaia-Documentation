@@ -656,6 +656,22 @@ The actual constitution — the "You are Gaia…" document with her character, c
 
 ---
 
+## Amendment — Not a History Rewrite: Where the Retired Terms Still Appear
+
+**Context.** The September 2026 consolidation retired `IntentIQ` and `ReasonIQ` as separate code components — Logos is now one faculty, with intent interpretation, meaning & evidence, and DecisionIQ as prompt-level faculties of a single pass. That decision is recorded above and in `proposals/architecture-v3.md`. But the term still appears in several documents that predate it: `architecture.md` (the retired v2.4.0), `operations.md`, and several proposals. A reader who takes a term's presence as evidence that the component still exists would be misled.
+
+**What this amendment does — and does not.** It records the situation; it does not edit the documents it describes. The retired documents are historical records of the state at their time of writing. Rewriting them to remove `IntentIQ`/`ReasonIQ` would falsify exactly the history this document exists to preserve. Where a reader needs the current truth, that is the ratification status in `proposals/architecture-v3.md` — not a silently edited old file.
+
+**What to read where:**
+- **Today's architecture direction** → `proposals/architecture-v3.md` (proposal, not yet ratified). One Logos faculty; no separate IntentIQ/ReasonIQ/Decision subsystems.
+- **Last ratified architecture** → `architecture.md` v2.4.0, retired but not superseded by anything adopted.
+- **Operational state** → `operations.md`. Note: it carries the same retirement lag as the documents above (it still names the ReasonIQ provider config), and is a living reference corrected in place rather than an archived one — worth a pass when someone is next in it.
+- **Historical text** (`evolution.md`, `split-plan.md`) → deliberately left as written.
+
+**Why this is an amendment and not an edit.** The repo's own rule (`sources/README.md`, and the "How to Read This Document" below) is that a change which contradicts the history should be deliberate and recorded — never applied by quietly overwriting the old text. This is that record.
+
+---
+
 ## How to Read This Document
 
 Each milestone records:
