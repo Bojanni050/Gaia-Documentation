@@ -44,6 +44,29 @@ framing: "Gaia is a lifelong personal intelligence designed to grow through unde
 
 ---
 
+## Milestone 1 — The Foundation Engine *(Phases 1–2)*
+
+> **Reconstructed 2026-10-05.** This milestone was never written. It is rebuilt from the
+> git history of `Gaia-Cloud` (commits `f71038e`, `f2a30df`, both 2026-08-06, which updated
+> `docs/evolution.md` at the time) and the surviving code. Facts are the commits; the
+> *why* paragraphs are marked `[?]` where they are inference rather than record.
+
+**Goal.** Milestone 0 left a `/docs` foundation that a human could read but that the model could not receive: `.md` files sitting in the repository with no path from "document" to "system prompt". This milestone builds that path — the **Foundation Engine**, which compiles the documents into a single build artifact the client loads at runtime, and then a **selector** that decides which of them a given turn actually needs.
+
+**What was built.**
+
+- **`foundation/` — the build engine.** `builder.ts` compiles the foundation markdown into one `artifact.json`; `cache.ts` holds it; `loader.ts` resolves each document from disk; `index.ts` exposes `getPrompt()`. A Node build step runs before start/build.
+- **`frontend/src/gaia/foundation/` — the consumer.** The artifact is imported directly and assembled into the prompt that reaches the model.
+- **The Foundation Selector (Phase 2).** A deterministic rule engine derives a `ConversationContext` from the user's intent — technical, conversational — and composes the system prompt from only the documents that context needs, so the context window is not bloated with unrelated material.
+
+**Why it mattered `[?]`.** The engine is what makes identity a *repository concern* rather than a code or model concern: the prompt is generated from versioned markdown, so changing who Gaia is becomes editing a document, not shipping a build. The selector is the first acknowledgement that not every turn needs the whole constitution — an early instance of the same instinct that later became gating (recall, reflection) rather than loading everything.
+
+**Lessons `[?]`.** The engineering concept here survived and was adapted, not discarded: it became the `foundation` build with `resolveConfig()` in the repo split (Phase 0, 2026-08-18), then `scripts/build-foundation-artifact.js` and a published `foundation-latest` release once the split completed (`split-plan.md`, Phase 1). What changed is *where* it resolves documents from and *who* consumes the artifact — the shape held.
+
+**Next milestone.** A working prompt path is not a voice: Milestone 2 wires the assembled prompt to a real streamed reply from Hermes.
+
+---
+
 ## Milestone 2 — Gaia Speaks *(Phase 3)*
 
 **Goal.** Gaia genuinely speaks for the first time. A typed message produces a real, streamed response from a local Hermes API. The mock dev-stub is gone. SOUL is canonical. Presence reflects the actual shape of the conversation.
@@ -653,6 +676,80 @@ The actual constitution — the "You are Gaia…" document with her character, c
 **What was deliberately not built.** `docs/lexicon.md` was not deleted, rewritten, or merged into SOUL. The reasoning in it — the two layers of language, when technical vocabulary becomes appropriate, the translation examples — is still correct, still more detailed than SOUL has room for, and still useful to anyone building on this codebase. What changed is only that the handful of rules that must hold on *every* turn now live in the document that is on *every* turn, while the reference material stays where the Foundation Selector can still choose it. No sanitization, word-blocking, or post-processing filter was added; like the tool-call-syntax fix above, the cause is the prompt, and a band-aid at the Response Engine would carry the same false-positive risk (a user legitimately asking what "geheugen" means in this context).
 
 **Why this matters.** This is the third instance of the same pattern — machinery vocabulary, then tool-call syntax, now chat-interface vocabulary — and each time the fix landed in SOUL rather than in code, because the thing leaking is a habit of the model underneath, and a habit is corrected by constitution, not by filtering. It also sharpens something SOUL previously left implicit: the substitutions are not a translation table for technical words (that was always `lexicon.md`'s job, and it covers it). Every word on the list is one Gaia could have said perfectly well about herself — *geheugen* and *samenvatting* are ordinary Dutch. They are banned because they point at the interface she is not, not because they are wrong.
+
+---
+
+## Milestone 10 — Deferred Cognition: Thinking After the Answer *(September 2026)*
+
+> **Reconstructed 2026-10-05** from the `Gaia-Cloud` commit history (20–30 September) and the
+> code. Facts are the commits; `[?]` marks inference.
+
+**Goal.** Through Milestones 7b–9, intent and reasoning ran *in front of* the reply: the turn had to pass IntentIQ, then ReasonIQ, before a single word came back. That made every turn pay the latency of deep reasoning, and it made the model's live path a chain of middleware. This milestone moves that reasoning *behind* the reply.
+
+**What was built.**
+
+- **Deferred cognition, separated from the turn path** (2026-09-21) — `Separate deferred cognition from the conversational turn path`; `Run deep ReasonIQ reasoning after the reply, not before it`. The live turn returns its answer; deep analysis runs afterwards.
+- **ReasonIQ redefined as background cognition** (2026-09-21) — `Redefine ReasonIQ as background cognition, outside the response pipeline`; made optional (`Make ReasonIQ optional: only the existing deep-reasoning decision activates it`), so trivial turns skip it.
+- **ReasonIQ v1.0 → v1.1** (21–22 September) — a real cognitive analysis model: observations, open questions, reflection (`92bfcdc`); then relationships, extended reflection, pattern context (`5602aca`).
+- **Observability** — every ReasonIQ gate decision logged with its own admin activity log; export to JSON/CSV; per-provider pricing in the model modal.
+- **Foundation retrieval** (2026-09-24) — Gaia can search Foundation's epistemic memory directly.
+- **Plan turns over SSE** (2026-09-25) — a plan's progress streams as a step frame without touching the delivered answer, and the full composed answer still reaches the streaming client.
+
+**Trade-offs `[?]`.** Deferring cognition buys conversational fluidity at the cost of *when* Gaia can react to what she noticed: a problem the background pass finds is fixed on the next turn, not this one. That is the same tension the V3 debates would later argue over explicitly — whether reflection that runs after the fact can prevent damage done during it.
+
+**Lessons `[?]`.** The step from "reasoning before" to "reasoning after" is the single conceptual move that made V3 possible; everything after it is refinement of *what* the background pass does and *how strictly* its output is quarantined. It also showed the cost pattern that recurs later: a background pass needs its own observability (logs, activity pages) to be trustworthy, because nobody watches it live.
+
+**Next milestone.** Once reasoning is a background pass, its *output* becomes the problem: observations, hypotheses, reflections that must never be mistaken for what actually happened.
+
+---
+
+## Milestone 11 — One Logos Faculty: The Consolidation *(3 October 2026)*
+
+> **Reconstructed 2026-10-05** from commits `8b67965`, `caeee9f`, `2b8e44e`, `eba2b44`
+> (3 October) and the decision source
+> `sources/proposals/Architectuurbesluit_ Consolidatie van Logos en Pensioen van IntentIQ & ReasonIQ.pdf`.
+
+**Goal.** The September V3 decision retired `IntentIQ` and `ReasonIQ` as separate components. This milestone implements that one decided point: there is no separate Intent subsystem, Reason subsystem, or Decision subsystem — there is one Logos faculty, prompt-level, running as background reflection.
+
+**What was built.**
+
+- **The consolidation** (`8b67965`) — IntentIQ/ReasonIQ retired as subsystems; one Logos pass (`logos.js` / `logosPrompt` / `logosSchema` / `logosValidate` / `logosLog`); `/admin/api/reasoniq/*` and the per-faculty stores removed; tests ported to `logos.*` under schema `logos.v1`. Full suite green (1334 pass) with eval parity against the pre-change baseline.
+- **The turn refactor** (`eba2b44`) — direct generation with primary/backup failover on retryable failures, no synchronous Logos pre-flight, no planning/routing layer in the live turn.
+- **The documents** (`caeee9f`, `2b8e44e`) — V3 foundation and architecture proposals added and indexed; `architecture.md` v2.4.0 marked **retired**; V3 sources consolidated under `docs/v3/`.
+- **IntentIQ kept, offline** (`d8ceaf4`, 4 October) — the IntentIQ *runtime* admin config is dropped; what remains is offline/eval-only.
+
+**Trade-offs `[?]`.** Consolidation removed real technical debt — the serialized hand-off between an intent phase and a reasoning phase — but it also removed a wall: intent interpretation and evidence evaluation now share one prompt, so the failure mode the September debates named ("prompt drift", the chef inspecting their own kitchen) becomes structurally possible. That is precisely why the *next* milestone adds the counter-hypothesis: the wall could not be rebuilt in the pipeline, so it had to be rebuilt in what the single prompt is required to produce.
+
+**Lessons `[?]`.** The three-pillar vocabulary survives the consolidation as *dimensions of one pass* (Retrospective Intent = ex-IntentIQ, Meaning & Evidence = ex-ReasonIQ, DecisionIQ), not as subsystems — a naming correction that mattered enough to appear in the source document itself (`3 pijlers.pdf`). Where the transcript material disagrees — it often describes the consolidation as a single black box or calls the memory layers by the wrong names — the code and this record win.
+
+**Next milestone.** One faculty produces hypotheses; the question becomes what may be *done* with them.
+
+---
+
+## Milestone 12 — The Epistemic Lifecycle: Never Silently a Fact *(4 October 2026)*
+
+> **Reconstructed 2026-10-05** from the 4 October commit series (Phases 2–6), `8b880a9`,
+> `71be190`, `aa19601`, `0ac6d99`, `e30dd1b`, and the code as it stands.
+
+**Goal.** Milestone 11 gave Logos its unified voice and its output — hypotheses. This milestone gives that output a lifecycle and, more importantly, a *quarantine*: nothing Logos derives may quietly become something Gaia treats as true.
+
+**What was built.**
+
+- **Cognition restored as the derived-knowledge store** (`26d8909`) — the lifecycle owner for hypotheses, patterns, mental models, open questions, relationships (`services/cognition`, Postgres).
+- **The Foundation seam** (`62bb3c3`, Phase 2) — Gaia turns are submitted to Foundation as raw observations; Foundation answers archive asks. Raw reality is one direction only.
+- **Cognition client + Hindsight sync writer + reconciliation** (`56cf86a`, Phase 3) — derived records are mirrored into Hindsight under the `gaia:*` namespace; Hindsight stays a *store* rebuildable from Cognition.
+- **Routing derived knowledge through Cognition; the GaiaChat confirm surface** (`aa19601`, Phases 4b/5) — the human review surface becomes the only path to `confirmed`.
+- **V3 counter-hypothesis + micro/macro scope** (`8b880a9`) — every hypothesis carries a mandatory anti-lexicographic counter-hypothesis, held in quarantine (shown for review, never spoken as fact). A hypothesis without one **cannot be confirmed**. `scope` (`micro`/`macro`) governs whether the machine may soft-promote it to `corroborated`; a `macro` statement needs a stated rationale to confirm.
+- **`rejected` as a hard quarantine** (`71be190`) — terminal for every automatic path (evidence, reasoning output, persistence, lifecycle verbs); the single exit is an explicit human `reopen` with a required reason.
+- **Retired layers removed** (`fcb8f7e`) — the old decision/orchestration/capability/tool layers and the earlier cognition sidecar deleted, so there is one derived store, not two.
+- **Kairos** (`e30dd1b`, 4 October) — a dedicated episode synthesizer and realtime SSE pipeline: raw Foundation observations become derived narrative episodes (`epistemic_status: 'interpretation'`), stored in Cognition, streamed to clients. The artefact is named `kairos_episode` to avoid colliding with Foundation's raw `episode`.
+- **The architecture graph** (`b0de482`) — `architecture-graph.md` / `.html`: the three stores, the live turn, deferred cognition, and the Absolute Override drawn as one picture.
+
+**Trade-offs `[?]`.** The lifecycle buys safety with friction: a human must now confirm what a machine derives, and a `macro` statement is refused without a written rationale. That friction is deliberate — it is the answer to "if you ask a human to verify fifty hypotheses a day, they rubber-stamp forty-nine" — but it is a cost paid on every confirmation, and the client-side non-trivial interaction it implies lives outside this repository.
+
+**Lessons `[?]`.** This is where the architecture stops being a pipeline and becomes an *epistemic* system: the meaningful guarantee is not that Logos is right, it is that Logos is never mistaken for reality. Every mechanism added (status labels, counter-hypothesis, quarantine, sunkep-only-mirror) enforces the same one-way rule — reality flows forward, derived understanding never loops back and overwrites it.
+
+**Next milestone `[?]`.** The proposals in `proposals/` are the live edge: a soft-evidence accumulator for micro-hypotheses (only once a real repeated-observation stream exists) and bias-inference across reasoning-provider switches (a provenance stamp, then a drift report). Neither is implemented.
 
 ---
 
