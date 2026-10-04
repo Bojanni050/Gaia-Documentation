@@ -46,10 +46,12 @@ framing: "Gaia is a lifelong personal intelligence designed to grow through unde
 
 ## Milestone 1 — The Foundation Engine *(Phases 1–2)*
 
-> **Reconstructed 2026-10-05.** This milestone was never written. It is rebuilt from the
+> **Reconstructed 2026-10-05 — provisional.** This milestone was never written. It is rebuilt from the
 > git history of `Gaia-Cloud` (commits `f71038e`, `f2a30df`, both 2026-08-06, which updated
 > `docs/evolution.md` at the time) and the surviving code. Facts are the commits; the
 > *why* paragraphs are marked `[?]` where they are inference rather than record.
+> See "On completeness" at the end of this document: the definitive version comes from the
+> chat records in Chronicle once they reach Foundation.
 
 **Goal.** Milestone 0 left a `/docs` foundation that a human could read but that the model could not receive: `.md` files sitting in the repository with no path from "document" to "system prompt". This milestone builds that path — the **Foundation Engine**, which compiles the documents into a single build artifact the client loads at runtime, and then a **selector** that decides which of them a given turn actually needs.
 
@@ -681,8 +683,9 @@ The actual constitution — the "You are Gaia…" document with her character, c
 
 ## Milestone 10 — Deferred Cognition: Thinking After the Answer *(September 2026)*
 
-> **Reconstructed 2026-10-05** from the `Gaia-Cloud` commit history (20–30 September) and the
-> code. Facts are the commits; `[?]` marks inference.
+> **Reconstructed 2026-10-05 — provisional** from the `Gaia-Cloud` commit history (20–30 September) and the
+> code. Facts are the commits; `[?]` marks inference. See "On completeness" at the end of this
+> document: provisional until the chat records reach Foundation.
 
 **Goal.** Through Milestones 7b–9, intent and reasoning ran *in front of* the reply: the turn had to pass IntentIQ, then ReasonIQ, before a single word came back. That made every turn pay the latency of deep reasoning, and it made the model's live path a chain of middleware. This milestone moves that reasoning *behind* the reply.
 
@@ -705,9 +708,9 @@ The actual constitution — the "You are Gaia…" document with her character, c
 
 ## Milestone 11 — One Logos Faculty: The Consolidation *(3 October 2026)*
 
-> **Reconstructed 2026-10-05** from commits `8b67965`, `caeee9f`, `2b8e44e`, `eba2b44`
+> **Reconstructed 2026-10-05 — provisional** from commits `8b67965`, `caeee9f`, `2b8e44e`, `eba2b44`
 > (3 October) and the decision source
-> `sources/proposals/Architectuurbesluit_ Consolidatie van Logos en Pensioen van IntentIQ & ReasonIQ.pdf`.
+> `sources/proposals/Architectuurbesluit_ Consolidatie van Logos en Pensioen van IntentIQ & ReasonIQ.pdf`. See "On completeness" at the end of this document.
 
 **Goal.** The September V3 decision retired `IntentIQ` and `ReasonIQ` as separate components. This milestone implements that one decided point: there is no separate Intent subsystem, Reason subsystem, or Decision subsystem — there is one Logos faculty, prompt-level, running as background reflection.
 
@@ -728,8 +731,9 @@ The actual constitution — the "You are Gaia…" document with her character, c
 
 ## Milestone 12 — The Epistemic Lifecycle: Never Silently a Fact *(4 October 2026)*
 
-> **Reconstructed 2026-10-05** from the 4 October commit series (Phases 2–6), `8b880a9`,
-> `71be190`, `aa19601`, `0ac6d99`, `e30dd1b`, and the code as it stands.
+> **Reconstructed 2026-10-05 — provisional** from the 4 October commit series (Phases 2–6), `8b880a9`,
+> `71be190`, `aa19601`, `0ac6d99`, `e30dd1b`, and the code as it stands. See "On completeness"
+> at the end of this document.
 
 **Goal.** Milestone 11 gave Logos its unified voice and its output — hypotheses. This milestone gives that output a lifecycle and, more importantly, a *quarantine*: nothing Logos derives may quietly become something Gaia treats as true.
 
@@ -780,3 +784,13 @@ Each milestone records:
 - The **next milestone** — what unlocks next, and what guardrail protects it.
 
 If a future change contradicts something here, the change should be deliberate — and Evolution should be updated alongside it.
+
+### On completeness — where this history actually comes from
+
+This document is not written from memory or from the commit log; it is written from the **conversations in which the decisions were made**. Much of what belongs here exists first as a chat with an AI, not as a note. Those chats are the primary source. The repository history is second-hand, and a milestone reconstructed from commits can record *what* changed but never *why* — the trade-off taken, the option rejected, the thing that felt wrong.
+
+Chronicle exists for exactly this: one place holding the AI conversations that carry the reasoning. Once those chats are ingested into **Foundation** as raw observations, the primary source is reachable and the history can be finished against it — not imported automatically (a chat log is raw observation; this document is derived understanding with a why, which is Logos's work and needs human confirmation), but written with the real material in hand.
+
+**So treat any milestone marked "Reconstructed" as provisional.** It was rebuilt from commits and code while the primary source was still locked in the archive. When the corresponding chats reach Foundation, that milestone should be revisited and rewritten against them — the reconstructed version is the placeholder, not the final word.
+
+
