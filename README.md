@@ -39,6 +39,7 @@ This repository keeps three kinds of material apart, because they are read diffe
 | 10 | [split-plan.md](./split-plan.md) | Boundaries between Gaia Cloud / Web / Desktop in the current monorepo and the phased plan to split them into three independent repositories |
 | 11 | [web-migration-plan.md](./web-migration-plan.md) | The web client's migration onto the Gaia API |
 | 12 | [operations.md](./operations.md) | *(not a foundation document — a living reference)* Where things actually run: the admin interface, deployment addresses, how to reach each service |
+| 13 | [capture-chronicle.md](./capture-chronicle.md) | The capture boundary: Chronicle brings chats byte-for-byte into Foundation and does nothing else; derived data (tags, summaries) stays in the user's own archive app |
 
 `lexicon.md` and `principles.md` are companion references: the vocabulary and the design principles that cut across the documents above.
 
