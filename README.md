@@ -21,7 +21,7 @@ This repository keeps three kinds of material apart, because they are read diffe
 - **The documents (this folder)** — the canonical, long-lived foundation. Read these.
 - **[proposals/](./proposals/)** — V3 target documents and blueprints. They are *not yet adopted*; while their open decisions remain unresolved, the documents above stay authoritative.
 - **[sources/](./sources/)** — the raw input documentation was derived from: research papers, conversation transcripts, and proposal PDFs. Input, not documentation.
-- **[archief/](./archief/)** — the previous folder structure, frozen. Kept for provenance, not for reading. It holds only what is *not* already published in `sources/`, `proposals/`, or the documents above — one copy of each file across the whole repository, never two.
+- **[archief/](./archief/)** — the previous folder structure, kept for provenance, not for reading. It holds only material that exists **nowhere else** in this repository (old development notes, the Chronicle manifests, early decision records). Superseded versions of the documents above, and any byte-identical copy, have been removed: **one version of each file across the whole repository, never two.** Git history keeps every earlier state.
 
 ## The Documents
 
