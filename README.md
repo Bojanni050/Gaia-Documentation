@@ -50,6 +50,11 @@ The V3 documents live in [proposals/](./proposals/) while their open decisions r
 - [proposals/architecture-v3.md](./proposals/architecture-v3.md) — **Proposal:** V3 target architecture with repository implementation status and unresolved architecture decisions.
 - [proposals/gaia-architecture-v3-0-rewrite-proposal.md](./proposals/gaia-architecture-v3-0-rewrite-proposal.md), [proposals/universal-foundation-comprehensive-design-architecture.md](./proposals/universal-foundation-comprehensive-design-architecture.md) — earlier, broader V3 rewrites.
 
+Two focused design proposals, not yet implemented (version `1.0.0-proposal`):
+
+- [proposals/proposal-soft-evidence-micro-accumulator.md](./proposals/proposal-soft-evidence-micro-accumulator.md) — a soft-evidence confidence accumulator, **micro-hypotheses only**, and only once a real repeated-observation stream exists. Confidence stays a linear delta until then.
+- [proposals/proposal-bias-inference-provider-switches.md](./proposals/proposal-bias-inference-provider-switches.md) — measure whether a reasoning-provider switch shifts *which* hypotheses get formed (a provenance stamp, then a form-feature drift report). Observability only; no LLM in the measurement.
+
 ## Gaia's Structure
 
 - **Gaia** → the agency herself — acts, decides, maintains continuity. **Runs in Gaia Cloud.**
