@@ -63,6 +63,31 @@ to you, they live in your tool, and they are not an input to Gaia's reasoning. I
 day comes when Gaia should know them too, that is a separate decision with a separate
 path (Logos proposes, a human confirms) — not a widening of the capture step.
 
+## The source file is the ultimate proof
+
+A chat is not the only thing that crosses. The **source file** (the ChatGPT, Claude
+or Gemini export the chat was parsed from) crosses too — **byte for byte**, whole,
+unopened.
+
+- **Foundation owns the original.** The export is stored at Foundation as one
+  immutable blob; **Chronicle keeps an identical copy.** Same bytes on both sides,
+  so — exactly like the chat — the two cannot drift; there is nothing to
+  synchronise.
+- **Parsing is unavoidable, interpretation is not.** Someone must open the file and
+  see which part is a conversation and which is the human's turn. Chronicle does
+  that, **as minimally as possible**: structure only (what is a chat, which role).
+  Summarising, weighing, tagging, deciding what is "noise" — none of that happens
+  at the capture side.
+- **The blob makes every parsing choice reversible.** Because the whole file is
+  kept as proof, a parse can be redone if it was ever wrong. The selection is a
+  traceable derivation over a preserved original — the same shape as a tag being a
+  fact *about* a chat, not an edit *of* it.
+- **The searchable unit is the conversation.** The file is one blob; each chat
+  inside it is sent separately so it becomes its own observation and its own
+  episode. One blob with everything in it would be retrievable as one
+  undifferentiated mass; a chat per conversation stays findable, datable and
+  deduplicable.
+
 ## Open — not decided here
 
 - **What counts as "a chat".** Each source (ChatGPT, Claude, Gemini, Qwen, …) has its
