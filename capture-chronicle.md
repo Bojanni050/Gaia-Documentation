@@ -101,6 +101,27 @@ unopened.
   archive is still being chosen; this document describes the capture role, which is
   independent of that choice.
 
+## Deleting from the archive does not delete from Gaia
+
+You may remove a chat from **your** archive. It stays in Foundation. This is not a
+gap but the point:
+
+- **The archive is yours; the observation is Gaia's.** Removing a chat from
+  Chronicle is an act in your tool, not an undo of something that happened. The
+  observation Foundation recorded is immutable, like every observation.
+- **The two are allowed to differ here.** Everywhere else the chat is kept
+  identical on both sides precisely so nothing can drift — but deletion is a
+  deliberate one-way act, not drift. What you no longer want to see in your
+  archive is not the same as asking Gaia to forget.
+- **It is final for the archive.** Once removed, Chronicle has no copy to
+  re-send; re-capturing means importing again. Foundation still holds the
+  observation and the source blob, so nothing captured is lost.
+- **Forgetting would be a separate decision.** If Gaia should ever *forget* —
+  not just "leave my archive" — that is a different mechanism (a retraction or a
+  tombstone, respecting the immutability of observations), with its own
+  rationale. It is not the same as deleting from the archive, and it is not
+  decided here.
+
 ## What must never happen
 
 - Chronicle writes a summary, pattern or interpretation into Foundation — or into
