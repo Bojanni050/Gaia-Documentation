@@ -48,10 +48,13 @@ With the worker off, or on but without a model, both clients' Kairos surfaces sh
 
 The live choice is the per-role selection in `/admin` → Provider Settings; the
 `GAIA_NATIVE_*`/`REASONIQ_MODEL_*`/`KAIROS_MODEL_*`/`AION_MODEL_*` env vars are
-only a fallback. For a low-cost setup, these **EdenAI** ids are verified against
-its public catalog (`GET https://api.edenai.run/v3/models`, Oct 2026 — the same
-endpoint `/admin`'s "Retrieve models" reads, so all of them appear in the
-dropdown). USD per 1M tokens in/out:
+only a fallback. **Every role except Voice can also carry its own provider**
+(Use Main Provider / OpenAI / EdenAI / Anthropic / Mistral / Custom) — so you can
+put reasoning on EdenAI/DeepSeek while vision stays on Gemini or Mistral, without
+one Main Provider having to serve both. For a low-cost setup, these **EdenAI** ids
+are verified against its public catalog (`GET https://api.edenai.run/v3/models`,
+Oct 2026 — the same endpoint `/admin`'s "Retrieve models" reads, so all of them
+appear in the dropdown). USD per 1M tokens in/out:
 
 | Role | EdenAI id | $ in/out | notes |
 |---|---|---|---|
