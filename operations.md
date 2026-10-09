@@ -83,6 +83,83 @@ regional variants (Azure/Bedrock/Vertex) are ~10% pricier.
 
 ---
 
+## Hindsight — model configuration
+
+Hindsight is the external memory provider (`vectorize-io/hindsight`), self-hosted
+on the VPS as the `hindsight` container (`:8888` API, `:9999` dashboard). It is
+**not** part of this repo and is not configurable from CommandCenter
+(`configurable: false` in the registry); its config lives in `/opt/hindsight/.env`
+on the VPS, untracked.
+
+It has **three** model slots, each configured separately:
+
+| Slot | Env prefix | Default | Notes |
+|---|---|---|---|
+| **LLM** | `HINDSIGHT_API_LLM_*` | `gpt-5-mini` | fact extraction, reflect, consolidation, mental-model refresh |
+| **Embedding** | `HINDSIGHT_API_EMBEDDINGS_*` | `BAAI/bge-small-en-v1.5` (local) | semantic search |
+| **Reranker** | `HINDSIGHT_API_RERANKER_*` | `cross-encoder/ms-marco-MiniLM-L-6-v2` (local) | reorders recall results |
+
+The deployment runs the **full image**, which bundles the local embedding and
+reranker models — those two cost **$0** and need no config. The only model cost
+is the **LLM**, and it can be split per operation (each set has its own
+`PROVIDER`/`API_KEY`/`MODEL`/`BASE_URL`, falling back to the global
+`HINDSIGHT_API_LLM_*`):
+
+| Operation | What it does | Cheapest suitable | Env |
+|---|---|---|---|
+| **retain** | extract facts/entities (strict JSON) | `deepseek-v4-flash`, `gemini-3.1-flash-lite`, `gpt-5-mini` | `HINDSIGHT_API_RETAIN_LLM_MODEL` |
+| **reflect** | user-facing reasoning + answer (tool loop) | `deepseek-chat` (non-thinking), `gemini-2.5-flash-lite` | `HINDSIGHT_API_REFLECT_LLM_MODEL` |
+| **consolidation** | merge observations (background) | `ministral-3b`, `gpt-5-nano` | `HINDSIGHT_API_CONSOLIDATION_LLM_MODEL` |
+| **mental-model refresh** | background refresh | `ministral-3b`, or a **local** `ollama` model | `HINDSIGHT_API_MENTAL_MODEL_REFRESH_LLM_MODEL` |
+
+Hindsight's own guidance: retain on a model with strong structured output,
+reflect on something faster/cheaper, and the background refresh on a no-think or
+local model "so the background job cannot destabilise interactive reflect".
+
+Concrete `/opt/hindsight/.env` — Option A, DeepSeek native (cheapest, simplest):
+
+```bash
+# LLM (embedding + reranker stay local in the full image)
+HINDSIGHT_API_LLM_PROVIDER=deepseek
+HINDSIGHT_API_LLM_API_KEY=sk-...
+HINDSIGHT_API_LLM_MODEL=deepseek-v4-flash          # retain: extraction, thinking mode
+HINDSIGHT_API_REFLECT_LLM_MODEL=deepseek-chat      # reflect: non-thinking, cheap + fast
+HINDSIGHT_API_CONSOLIDATION_LLM_MODEL=deepseek-chat
+HINDSIGHT_API_MENTAL_MODEL_REFRESH_LLM_MODEL=deepseek-chat
+```
+
+Option B, via EdenAI (one key for everything; EdenAI is not a native Hindsight
+provider, so it goes through the OpenAI-compatible base URL):
+
+```bash
+HINDSIGHT_API_LLM_PROVIDER=openai
+HINDSIGHT_API_LLM_BASE_URL=https://api.edenai.run/v3
+HINDSIGHT_API_LLM_API_KEY=<edenai key>
+HINDSIGHT_API_LLM_MODEL=deepinfra/deepseek-ai/DeepSeek-V4-Flash
+HINDSIGHT_API_REFLECT_LLM_MODEL=google/gemini-2.5-flash-lite
+HINDSIGHT_API_CONSOLIDATION_LLM_MODEL=mistral/ministral-3b-2512
+HINDSIGHT_API_MENTAL_MODEL_REFRESH_LLM_MODEL=mistral/ministral-3b-2512
+```
+
+Three cautions:
+
+- **Switching the embedding model is not free.** Vectors from a different model
+  are not comparable, so the whole bank must be re-embedded and the dimension
+  changes. The local `bge-small` is the cheapest and already active — leave it
+  unless there is a real reason. External options: `text-embedding-3-small`
+  (~$0.02/1M) or Gemini embeddings.
+- **The reranker** default is local and free; `flashrank` is a lighter CPU
+  variant and `rrf` skips neural reranking entirely (cheapest). External cheapest
+  is SiliconFlow `BAAI/bge-reranker-v2-m3`.
+- **`retain` needs reliable structured output** — going too cheap there hurts
+  extraction quality, which is the whole point of the memory. Cut cost on
+  `reflect`/`consolidation`/refresh instead.
+
+Apply on the VPS: edit `/opt/hindsight/.env`, then
+`docker compose up -d` in `/opt/hindsight`.
+
+---
+
 ## Deployment
 
 - **Host:** VPS, reached over Tailscale only — no public SSH (closed as of 2026-08-29).
